@@ -1,0 +1,12 @@
+wandb
+accelerate>=1.0.0
+torchvision
+transformers>=4.47.0
+ftfy
+tensorboard
+Jinja2
+peft>=0.14.0
+sentencepiece
+lpips
+bitsandbytes
+prodigyopt

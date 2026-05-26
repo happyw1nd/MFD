@@ -1,0 +1,12 @@
+# ide
+.vscode/
+
+# Python
+__pycache__/
+*.py[cod]
+
+# large data
+wandb/
+diffusers/
+datasets/
+outputs/
