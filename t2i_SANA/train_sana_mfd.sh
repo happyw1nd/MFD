@@ -21,6 +21,8 @@ accelerate launch \
   --learning_rate_stu=1e-4 \
   --learning_rate_aux=1e-4 \
   --ode_step_size=0.02 \
+  --aux_steps_per_cycle=50 \
+  --student_steps_per_cycle=20 \
   --r_not_equal_t_ratio=1.0 \
   --optimizer="AdamW" \
   --max_grad_norm=1.0 \

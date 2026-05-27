@@ -590,6 +590,18 @@ def parse_args(input_args=None):
         help="ODE step size for integration",
     )
     parser.add_argument(
+        "--aux_steps_per_cycle",
+        type=int,
+        default=9,
+        help="Number of steps to train the aux model per alternating cycle.",
+    )
+    parser.add_argument(
+        "--student_steps_per_cycle",
+        type=int,
+        default=1,
+        help="Number of steps to train the student model per alternating cycle.",
+    )
+    parser.add_argument(
         "--r_not_equal_t_ratio",
         type=float,
         default=1.0,
@@ -1355,13 +1367,21 @@ def main(args):
     loss_stu = torch.tensor([0.0])
     loss_aux = torch.tensor([0.0])
 
+    # Alternating training cycle: aux trains for aux_steps_per_cycle steps,
+    # then student trains for student_steps_per_cycle steps, repeat.
+    aux_steps = args.aux_steps_per_cycle
+    stu_steps = args.student_steps_per_cycle
+    cycle_length = aux_steps + stu_steps
+
     for epoch in range(first_epoch, args.num_train_epochs):
         transformer.train()
 
         for step, batch in enumerate(train_dataloader):
             models_to_accumulate = [transformer]
             with accelerator.accumulate(models_to_accumulate):
-                if (global_step+1) % 10 != 0: # train aux
+                # Determine which model to train in this step of the alternating cycle
+                step_in_cycle = global_step % cycle_length
+                if step_in_cycle < aux_steps:  # train aux
                 
                     prompts = batch["prompts"]
 
@@ -1416,7 +1436,7 @@ def main(args):
 
                     
 
-                else: # train student
+                else:  # train student
                 
                     prompts = batch["prompts"]
 
@@ -1450,7 +1470,8 @@ def main(args):
                             Z_decoded = (Z_decoded / 2 + 0.5).clamp(0, 1).cpu().permute(0, 2, 3, 1).float().numpy()
                             for i in range(min(1, Z_decoded.shape[0])):
                                 img = Image.fromarray((Z_decoded[i] * 255).round().astype("uint8"))
-                                img.save(os.path.join("/data_storage/zju/tmp_cache/outputs/pics/tmp", f"Z_epoch{epoch}_step{step}_idx{i}.png"))
+                                os.makedirs(os.path.join(args.output_dir, "pics"), exist_ok=True)
+                                img.save(os.path.join(args.output_dir, "pics", f"Z_epoch{epoch}_step{step}_idx{i}.png"))
 
                     
                     t, r = sample_t_r(batch_size=args.train_batch_size, device=accelerator.device, dtype=weight_dtype, r_not_equal_t_ratio=args.r_not_equal_t_ratio, dist_type='uniform', min_interval=0.0)
