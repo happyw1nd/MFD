@@ -6,7 +6,7 @@ Official implementation of **"Mean Flow Distillation: Robust and Stable Distilla
 
 This repository provides the training code for multi-GPU Mean Flow Distillation (MFD) on **SANA 1.6B**. The current release focuses on prompt-only text-to-image distillation with LoRA adapters built on top of the Hugging Face `diffusers` SANA pipeline.
 
-> 📌 Paper and BibTeX will be added soon.
+> 📌 Paper link: https://arxiv.org/abs/2606.11155
 
 ## ✨ Highlights
 
@@ -17,7 +17,7 @@ This repository provides the training code for multi-GPU Mean Flow Distillation 
 
 ## 📋 TODO
 
-- [ ] Add paper link.
+- [x] Add paper link.
 - [ ] Add pretrained MFD LoRA checkpoints.
 
 ## 🧩 Repository Structure
@@ -164,7 +164,15 @@ t2i_SANA/sana.png
 If you find this repository useful, please consider citing our work.
 
 ```bibtex
-TODO: Add BibTeX entry after the paper is public.
+@misc{zhao2026MeanFlowDistillation,
+      title={Mean Flow Distillation: Robust and Stable Distillation for Flow Matching Models}, 
+      author={An Zhao and Shengyuan Zhang and Zhongjian Sun and Yixiang Zhou and Zejian Li and Ling Yang and Tianrun Chen and Lingyun Sun},
+      year={2026},
+      eprint={2606.11155},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2606.11155}, 
+}
 ```
 
 ## 🙏 Acknowledgements
